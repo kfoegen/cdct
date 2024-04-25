@@ -1,0 +1,74 @@
+{
+  "consumer": {
+    "name": "PaymentService"
+  },
+  "interactions": [
+    {
+      "description": "a request to send an invoice to customer",
+      "request": {
+        "body": {
+          "emailAddress": "customer@provider.com",
+          "template": "INVOICE",
+          "variables": {
+            "orderDate": "2024-04-26",
+            "orderNo": "123456789",
+            "totalAmount": "100"
+          }
+        },
+        "headers": {
+          "content-type": "application/json"
+        },
+        "method": "POST",
+        "path": "/email"
+      },
+      "response": {
+        "body": {
+          "status": "SENT"
+        },
+        "headers": {
+          "content-type": "application/json"
+        },
+        "status": 201
+      }
+    },
+    {
+      "description": "a request to send an invoice to customer with invalid email address",
+      "request": {
+        "body": {
+          "emailAddress": "invalidemail.com",
+          "template": "INVOICE",
+          "variables": {
+            "orderDate": "2024-04-26",
+            "orderNo": "123456789",
+            "totalAmount": "100"
+          }
+        },
+        "headers": {
+          "content-type": "application/json"
+        },
+        "method": "POST",
+        "path": "/email"
+      },
+      "response": {
+        "body": {
+          "status": "NOT_DELIVERED"
+        },
+        "headers": {
+          "content-type": "application/json"
+        },
+        "status": 201
+      }
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.6.6"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "EmailService"
+  }
+}

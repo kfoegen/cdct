@@ -11,11 +11,11 @@ import static com.github.kfoegen.cdct.paymentservice.email.EmailTemplateName.INV
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Component
-public class EmailServiceClient {
+public class EmailService {
 
     private final RestClient restClient;
 
-    public EmailServiceClient() {
+    public EmailService() {
         this.restClient = RestClient.builder().build();
     }
 

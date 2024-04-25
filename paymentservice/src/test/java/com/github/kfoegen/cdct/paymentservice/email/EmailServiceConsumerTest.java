@@ -71,4 +71,54 @@ class EmailServiceConsumerTest {
 
         assertThat(response.status()).isEqualTo(EmailStatus.SENT);
     }
+
+    @Pact(consumer = "PaymentService")
+    RequestResponsePact pactToSendInvoiceToCustomerWithInvalidEmailAddress(PactDslWithProvider builder) {
+        return builder
+                .uponReceiving("a request to send an invoice to customer with invalid email address")
+                .path("/email")
+                .method("POST")
+                .headers(
+                        Map.of("content-type", "application/json")
+                )
+                .body("""
+                        {
+                          "template": "INVOICE",
+                          "emailAddress": "invalidemail.com",
+                          "variables": {
+                            "orderNo": "123456789",
+                            "orderDate": "2024-04-26",
+                            "totalAmount": "100"
+                          }
+                        }
+                        """
+                )
+                .willRespondWith()
+                .status(201)
+                .headers(
+                        Map.of("content-type", "application/json")
+                )
+                .body("""
+                        {
+                          "status": "NOT_DELIVERED"
+                        }
+                        """
+                )
+                .toPact();
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "pactToSendInvoiceToCustomerWithInvalidEmailAddress")
+    void testSendInvoiceToCustomerWithInvalidEmailAddress() {
+        var paymentRequest = new PaymentRequest(
+                "123456789",
+                "invalidemail.com",
+                LocalDate.of(2024, 4, 26),
+                BigDecimal.valueOf(100));
+
+        var emailServiceClient = new EmailService();
+        var response = emailServiceClient.sendInvoiceToCustomer(paymentRequest);
+
+        assertThat(response.status()).isEqualTo(EmailStatus.NOT_DELIVERED);
+    }
 }

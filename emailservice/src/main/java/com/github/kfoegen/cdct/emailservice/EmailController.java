@@ -19,7 +19,7 @@ public class EmailController {
         var emailStatus = sendEmail(emailAddress, emailBody);
 
         var emailResponse = new EmailResponse(emailStatus);
-        return new ResponseEntity<>(emailResponse, HttpStatus.OK);
+        return new ResponseEntity<>(emailResponse, HttpStatus.CREATED);
     }
 
     private String prepareEmailBody(EmailTemplate emailTemplate, Map<String, String> variables) {
@@ -45,7 +45,7 @@ public class EmailController {
             return EmailStatus.SENT;
         } else {
             System.out.println("Email was not sent successfully");
-            return EmailStatus.BOUNCED;
+            return EmailStatus.NOT_DELIVERED;
         }
     }
 
