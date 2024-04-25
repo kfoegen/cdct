@@ -1,0 +1,56 @@
+name: Check CDCT
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  check_task_1:
+    name: Check Task 1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Check Task 1
+        run: ./gradlew :paymentservice:test
+
+  check_task_2:
+    name: Check Task 2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Check Task 2
+        run: ./gradlew emailservice:test --tests '*Test'
+
+  check_task_3:
+    name: Check Task 3
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Check Task 3
+        run: ./gradlew emailservice:test --tests '*EmailServiceProviderPipelineCheck'
